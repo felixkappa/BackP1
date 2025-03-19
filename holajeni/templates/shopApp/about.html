@@ -1,0 +1,16 @@
+{% extends "shopApp/base.html" %}
+
+{% block content %}
+<h1>Lista de Contactos Activos</h1>
+
+{% if contacts %}
+<ul>
+    {% for contact in contacts %}
+        <li>{{ contact.full_name }} - {{ contact.email }} - {{ contact.phone }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+    <p>No hay contactos activos.</p>
+{% endif %}
+</ul>
+{% endblock %}
