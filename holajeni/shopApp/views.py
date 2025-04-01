@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.templatetags.static import static
-from shopApp.models import Product
-from shopApp.models import Contact 
+from shopApp.models import Product, Contact 
+from shopApp.forms import FormComment, FormContact
 
 def about(request):
     active_contacts = Contact.objects.filter(active=True)  
@@ -15,7 +15,6 @@ def home(request):
     product_list = Product.objects.all()
     special_offers = Product.objects.filter(product_is_offer=True)
     my_context = {
-    'user': 'guest',
     'message': 'Largo de aqui',
     'special_offers': special_offers,
     'product_list' : product_list,
@@ -53,3 +52,29 @@ def home(request):
 
 def about(request):
     return render(request, 'shopApp/about.html')
+
+def form_comment(request):
+    form = FormComment()
+
+    if request.method == 'POST':
+        form = FormComment(request.POST)
+        if form.is_valid():
+            print("FORMULARIO VALIDO")
+            print('Nombre: ', form.cleaned_data['full_name'])
+            print('Email: ', form.cleaned_data['email'])
+            print('Comment: ', form.cleaned_data['comment'])
+    return render(request, 'shopApp/form_comment.html', context={'form' : form})
+
+def form_contact(request):
+    form = FormContact()
+
+    if request.method == 'POST':
+        form = FormContact(request.POST)
+        if form.is_valid():
+            print("FORMULARIO VALIDO")
+            print('Nombre: ', form.cleaned_data['full_name'])
+            print('Direccion: ', form.cleaned_data['address'])
+            print('Celular: ', form.cleaned_data['phone'])
+            print('Email: ', form.cleaned_data['email'])
+            return redirect('about') 
+    return render(request, 'shopApp/form_contact.html', context={'form' : form})
